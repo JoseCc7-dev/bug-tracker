@@ -8,6 +8,7 @@ from . import models
 
 def index(request):
     if request.user.is_authenticated:
+        print(request.GET)
         return render(request, "trackersite/index.html")
     else:
         print(request.user)
@@ -65,3 +66,19 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect("login")
+
+def create_project(request):
+    if request.method == "POST":
+        return render(request, "trackersite/newproject.html")
+    else:
+        return render(request, "trackersite/newproject.html")
+ 
+
+def create_ticket(request):
+    pass
+
+def manage_project(request):
+    pass
+
+def manage_users(request):
+    pass

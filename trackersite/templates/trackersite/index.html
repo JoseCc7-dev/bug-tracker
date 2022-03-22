@@ -1,5 +1,7 @@
 {% extends 'trackersite/layout.html' %}
 {% load static %}
 {% block body %}
-<img src="{% static 'trackersite/logo.png' %}">
+    <div class="div"><a href="{% url 'create_project' %}" name="test"> Create New Project </a></div>
+    <div class="div"><a href="#"> Submit Ticket </a></div>
+    <div class="div"><a href="#"> Manage Users </a></div>
 {% endblock %}

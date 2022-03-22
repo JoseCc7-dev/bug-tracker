@@ -1,0 +1,14 @@
+{% extends 'trackersite/layout.html' %}
+
+{% load static %}
+
+{% block body %}
+<div class="wrapper">
+    <div class="text-center mt-4 name" style="display: flex; justify-content: center;"> New Project </div>
+    <form action="{% url 'create_project' %}" method="post" class="p-3 mt-3">
+        {% csrf_token %}
+        <div style="display: flex; justify-content: center;"><input type="text" placeholder="Project Title" class="form-field d-flex align-items-center" maxlength="30" style="width: 100%;"></div>
+        <div><textarea cols="30" rows="10" placeholder="Project description/goals" class="form-field d-flex align-items-center"></textarea></div>
+    </form>
+</div>
+{% endblock %}
