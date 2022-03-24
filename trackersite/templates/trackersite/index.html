@@ -4,4 +4,16 @@
     <div class="div"><a href="{% url 'create_project' %}" name="test"> Create New Project </a></div>
     <div class="div"><a href="#"> Submit Ticket </a></div>
     <div class="div"><a href="#"> Manage Users </a></div>
+    Active Projects
+    {% for project in projects %}
+        {% if project.active == True %}
+        <div><a href="manage-project/{{ project.title }}">{{ project.title }}</a>  </div>
+        {% endif %}
+    {% endfor %}
+    Completed/Inactive Projects
+    {% for project in projects %}
+        {% if project.active != True %}
+        <div><a href="manage-project/{{ project.title }}">{{ project.title }}</a>  </div>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

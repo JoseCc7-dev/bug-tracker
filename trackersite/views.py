@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -9,7 +10,10 @@ from . import models
 def index(request):
     if request.user.is_authenticated:
         print(request.GET)
-        return render(request, "trackersite/index.html")
+        projects = models.Project.objects.filter()
+        return render(request, "trackersite/index.html", {
+            "projects": projects
+        })
     else:
         print(request.user)
         return HttpResponseRedirect(reverse("login"))
@@ -67,18 +71,44 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect("login")
 
+
 def create_project(request):
-    if request.method == "POST":
-        return render(request, "trackersite/newproject.html")
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            title = request.POST["title"].strip()
+            desc = request.POST["desc"].strip()
+            newProj = models.Project.objects.create(title = title, desc = desc)
+            return HttpResponseRedirect("manage-project/{}".format(title))
+        else:
+            return render(request, "trackersite/newProject.html")
     else:
-        return render(request, "trackersite/newproject.html")
- 
+        return HttpResponseRedirect(reverse("login"))
 
 def create_ticket(request):
     pass
 
-def manage_project(request):
-    pass
+def manage_project(request, name):
+    if request.user.is_authenticated:
+        project = models.Project.objects.get(title = name)
+        team = models.Team.objects.filter(project_id = project.id).order_by('-role')
+        users = models.User.objects.exclude(id__in=
+            models.Team.objects.filter(project_id = project.id).values_list('member_id', flat=True))
+        print(users)
+        return render(request, 'trackersite/manageProject.html', {
+            "project": project, "members":users, "team":team
+        })
+    else:
+        return HttpResponseRedirect(reverse("login"))    
 
 def manage_users(request):
     pass
+
+def add_team_member(request):
+    body = json.loads(request.body.decode("utf-8"))
+    project_id = body["project_id"]
+    user_id = models.User.objects.get(username=body["user"]).id
+    role = body["role"]
+    print(project_id, user_id, role)
+    member = models.Team.objects.create(project_id=project_id, member_id=user_id, role=role)
+    print("new member made")
+    return HttpResponse(status=204)

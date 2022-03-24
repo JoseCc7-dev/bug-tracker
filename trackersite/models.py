@@ -10,11 +10,11 @@ class User(AbstractUser):
         MANG = "Manager", "Manager"
         ADMN = "Admin", "Admin"
     role = models.CharField(max_length=9, choices=Role.choices, default=Role.DEV)
-    pass
 
 class Project(models.Model):
     title = models.CharField(max_length=30)
     desc = models.CharField(max_length=600)
+    active = models.BooleanField()
 
 class Team(models.Model):
     

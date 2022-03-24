@@ -1,0 +1,43 @@
+{% extends 'trackersite/layout.html' %}
+
+{% block body %}
+<div style="justify-content: center; display: flex;">
+    <input type="hidden" value="{{ project.id }}" id="project_id">
+    <div>{{ project.title }}</div><br>
+    <div>{{ project.desc }}</div>
+</div>
+<div>
+    <table>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+        </tr>
+        {% for member in team %}
+            <tr>
+                <th>{{member.member.username}}</th>
+                <th>{{member.member.email}}</th>
+                <th>{{member.role}}</th>
+            </tr>
+        {% endfor %}
+      </table>
+</div>
+{% if user.role == 'Admin' or user.role == 'Manager' %}
+    <div>
+        <label for="team-members"> Assign member to team </label>
+        <select id="team_members" name="members">
+        {% for member in members %}
+            <option>{{ member.username }}</option>
+        {% endfor %}
+        </select>
+        <select id="member_role" name="roles">
+            <option>Developer</option>
+            {% if user.role == 'Admin' %}
+            <option>Manager</option>
+            {% endif %}
+        </select>
+        <button id="add_member" class="btn btn-primary">Add</button>
+    </div>
+{% endif %}
+
+{% endblock %}
