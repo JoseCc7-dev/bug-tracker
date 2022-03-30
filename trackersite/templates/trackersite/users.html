@@ -1,0 +1,35 @@
+{% extends 'trackersite/layout.html' %}
+
+{% block body %}
+
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            {% if user.role == 'Admin' %}
+                <th></th>
+                <th></th>
+            {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for name in users %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{name.username}}</td>
+                <td>{{name.email}}</td>
+                <td id="role_{{name.id}}">{{name.role}}</td>
+                {% if user.role == 'Admin' %}
+                <td><button type="button" class="btn" onclick="role_select('{{ name.id }}');">Change Role</button></td>
+                <td><button type="button" class="btn" onclick="remove_user('{{ name.id }}');">Remove User</button></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>    
+{% endblock %}

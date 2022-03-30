@@ -8,7 +8,7 @@
 }
 
 body {
-    background: #ecf0f3
+    background: #ffffff
 }
 
 .wrapper {
@@ -94,4 +94,32 @@ body {
         margin: 30px 20px;
         padding: 40px 15px 15px 15px
     }
+}
+
+th{
+    font-weight: normal;
+}
+
+th.middle{
+    border: 1px solid black;
+}
+
+tr.top{
+    border-bottom: 1px solid black;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.brand{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #ffffff;
+}
+
+.customNav {
+    background: rgb(75,75,75);
+    background: -moz-linear-gradient(left, rgba(75,75,75,1) 0%, rgba(101,101,101,1) 100%);
+    background: -webkit-linear-gradient(left, rgba(75,75,75,1) 0%,rgba(101,101,101,1) 100%);
+    background: linear-gradient(to right, rgba(75,75,75,1) 0%,rgba(101,101,101,1) 100%);
 }

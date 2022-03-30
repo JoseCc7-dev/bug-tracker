@@ -1,0 +1,22 @@
+{% extends 'trackersite/layout.html' %}
+
+{% block body %}
+
+<div class="wrapper">
+    <div class="text-center mt-4 name" style="display: flex; justify-content: center;"> New Ticket </div>
+    <form action="{% url 'create_project' %}" method="post" class="p-3 mt-3">
+        {% csrf_token %}
+        <div style="display: flex; justify-content: center;"><input type="text" name="title" placeholder="Ticket Title" class="form-field d-flex align-items-center" maxlength="30" style="width: 100%;"></div>
+        <div><textarea cols="30" rows="10" name="desc" maxlength="400" placeholder="Issue description" class="form-field d-flex align-items-center"></textarea></div> 
+        <select id="ticket_priority" name="priority">
+            <option disabled>Ticket Priority</option>
+            <option>1 (Low)</option>
+            <option>2 (Medium)</option>
+            <option>3 (High)</option>
+            <option>4 (Urgent)</option>
+        </select>
+        <input type="hidden" name="submitter" value="{{ user.username }}"><button class="btn mt-3">Generate Ticket</button>
+    </form>
+</div>
+
+{% endblock %}

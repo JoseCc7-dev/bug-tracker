@@ -1,9 +1,8 @@
 {% extends 'trackersite/layout.html' %}
-{% load static %}
+
 {% block body %}
     <div class="div"><a href="{% url 'create_project' %}" name="test"> Create New Project </a></div>
-    <div class="div"><a href="#"> Submit Ticket </a></div>
-    <div class="div"><a href="#"> Manage Users </a></div>
+    <div class="div"><a href="{% url 'manage_users' %}"> Manage Users </a></div>
     Active Projects
     {% for project in projects %}
         {% if project.active == True %}

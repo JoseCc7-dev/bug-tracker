@@ -6,7 +6,7 @@
         {% csrf_token %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        
+        <link rel="shortcut icon" type="img/ico" href="{% static 'trackersite/favicon.ico' %}">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <!-- CSS only -->
@@ -17,26 +17,27 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="{% static 'trackersite/style.css' %}">
         <script src="{% static 'trackersite/script.js' %}"></script>
-
+        
         <title>BugTracker</title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="{% url 'index' %}">Logged in as: {{ user.username }}</a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light customNav">
+          <a class="brand navbar-brand " href="{% url 'index' %}">Harmonic</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sitetoggle">
             <span class="navbar-toggler-icon"></span>
           </button>
-        
           <div class="collapse navbar-collapse" id="sitetoggle">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li class="nav-item active">
-                <div class="nav-link">Role: {{user.role}}</div>
+                <div class="nav-link brand" id="user_role">{{user.role}}</div>
               </li>
+              {% if user.role == 'Admin' %}
               <li class="nav-item">
-                <a class="nav-link" href="#">Temp</a>
+                <a class="nav-link brand" href="{% url 'manage_users' %}">Manage Users</a>
               </li>
+              {% endif %}
               <li class="nav-item">
-                <a class="nav-link " href="{% url 'logout' %}">Logout</a>
+                <a class="nav-link brand" href="{% url 'logout' %}">Logout</a>
               </li>
             </ul>
             <!-- Search Bar -->

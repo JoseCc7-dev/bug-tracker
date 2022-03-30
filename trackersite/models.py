@@ -14,20 +14,21 @@ class User(AbstractUser):
 class Project(models.Model):
     title = models.CharField(max_length=30)
     desc = models.CharField(max_length=600)
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
 
 class Team(models.Model):
-    
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=15)
     
 
-class Ticket (models.Model):
-    title = models.CharField(max_length=50)
+class Ticket(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    title = models.CharField(max_length=30)
     submitter = models.ForeignKey(User, on_delete=models.CASCADE)
     desc = models.CharField(max_length=400)
     priority = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
-    ongoing = models.BooleanField()
+    ongoing = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now=True)
-    
+
+# class Organization(models.Model):
+    # 

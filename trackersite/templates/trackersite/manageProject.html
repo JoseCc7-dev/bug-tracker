@@ -1,43 +1,55 @@
 {% extends 'trackersite/layout.html' %}
 
 {% block body %}
-<div style="justify-content: center; display: flex;">
-    <input type="hidden" value="{{ project.id }}" id="project_id">
-    <div>{{ project.title }}</div><br>
-    <div>{{ project.desc }}</div>
-</div>
-<div>
-    <table>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-        </tr>
-        {% for member in team %}
-            <tr>
-                <th>{{member.member.username}}</th>
-                <th>{{member.member.email}}</th>
-                <th>{{member.role}}</th>
-            </tr>
-        {% endfor %}
-      </table>
-</div>
-{% if user.role == 'Admin' or user.role == 'Manager' %}
-    <div>
-        <label for="team-members"> Assign member to team </label>
-        <select id="team_members" name="members">
-        {% for member in members %}
-            <option>{{ member.username }}</option>
-        {% endfor %}
-        </select>
-        <select id="member_role" name="roles">
-            <option>Developer</option>
-            {% if user.role == 'Admin' %}
-            <option>Manager</option>
-            {% endif %}
-        </select>
-        <button id="add_member" class="btn btn-primary">Add</button>
+    <div style="justify-content: center; display: flex; margin-bottom: .5%;">
+        <input type="hidden" value="{{ project.id }}" id="project_id">
+        <div>{{ project.title }}</div><br>
     </div>
-{% endif %}
+    <div style="margin-bottom: 5%; justify-content: center; display: flex;">{{ project.desc }}</div>
+    <div style="border: 1px solid black; width: 50%; float: right;">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in team %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{member.member.username}}</td>
+                    <td>{{member.member.email}}</td>
+                    <td>{{member.member.role}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% if user.role == 'Admin' or user.role == 'Manager' %}
+        {% if project.active == True %}
+            <div>
+                <label for="team-members"> Assign member to team </label>
+                <select id="team_members" name="members">
+                {% for member in members %}
+                    <option>{{ member.username }}</option>
+                {% endfor %}
+                </select>
+                <button id="add_member" class="btn btn-primary">Add</button>
+            </div>
+            <div>
+                <a href="{% url 'new_ticket' %}">Submit Ticket</a>
+            </div>
+            {% if user.role == 'Admin' %}
+            <button class="btn btn-primary" id="change_project_status" value="False">Set Project as Complete</button>
+            {% endif %}
+        {% else %}
+        {% if user.role == 'Admin' %}
+        <button class="btn btn-primary" id="change_project_status" value="True">Set Project as Active</button>
+        {% endif %}
+        {% endif %}
+    {% endif %}
+    </div>
 
 {% endblock %}
