@@ -11,7 +11,7 @@ body {
     background: #ffffff
 }
 
-.wrapper {
+.wrapperex {
     max-width: 350px;
     min-height: 500px;
     margin: 80px auto;
@@ -34,7 +34,7 @@ body {
     box-shadow: 0px 0px 3px #5f5f5f, 0px 0px 0px 5px #ecf0f3, 8px 8px 15px #a7aaa7, -8px -8px 15px #fff
 }
 
-.wrapper .name {
+.wrapperex .name {
     font-weight: 600;
     font-size: 1.4rem;
     letter-spacing: 1.3px;
@@ -42,7 +42,7 @@ body {
     color: #555
 }
 
-.wrapper .form-field input {
+.wrapperex .form-field input {
     width: 100%;
     display: block;
     border: none;
@@ -53,18 +53,18 @@ body {
     padding: 10px 15px 10px 10px
 }
 
-.wrapper .form-field {
+.wrapperex .form-field {
     padding-left: 10px;
     margin-bottom: 20px;
     border-radius: 20px;
     box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff
 }
 
-.wrapper .form-field .fas {
+.wrapperex .form-field .fas {
     color: #555
 }
 
-.wrapper .btn {
+.wrapperex .btn {
     box-shadow: none;
     width: 100%;
     height: 40px;
@@ -75,22 +75,22 @@ body {
     letter-spacing: 1.3px
 }
 
-.wrapper .btn:hover {
+.wrapperex .btn:hover {
     background-color: #039BE5
 }
 
-.wrapper a {
+.wrapperex a {
     text-decoration: none;
     font-size: 0.8rem;
     color: #03A9F4
 }
 
-.wrapper a:hover {
+.wrapperex a:hover {
     color: #039BE5
 }
 
 @media(max-width: 380px) {
-    .wrapper {
+    .wrapperex {
         margin: 30px 20px;
         padding: 40px 15px 15px 15px
     }
@@ -122,4 +122,21 @@ tr.top{
     background: -moz-linear-gradient(left, rgba(75,75,75,1) 0%, rgba(101,101,101,1) 100%);
     background: -webkit-linear-gradient(left, rgba(75,75,75,1) 0%,rgba(101,101,101,1) 100%);
     background: linear-gradient(to right, rgba(75,75,75,1) 0%,rgba(101,101,101,1) 100%);
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #323232 !important;
+    float: right;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th {
+    border-bottom-style: solid;
+}
+
+table tbody tr {
+    border-bottom: 1pt solid black;
 }

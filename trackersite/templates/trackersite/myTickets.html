@@ -1,0 +1,36 @@
+{% extends 'trackersite/layout.html' %}
+
+{% block body %}
+<div style="justify-content:center; display: flex;">My Tickets</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Status</th>
+            <th scope="col">Type</th>
+            <th scope="col">Time Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ticket.title}}</td>
+                <td>{{ticket.priority}}</td>
+                <td>{{ticket.status}}</td>
+                <td>{{ticket.type}}</td>
+                <!-- {% if user.role == 'Admin' %}
+                <td><button type="button" class="btn" onclick="role_select('{{ name.id }}');">Change Role</button></td>
+                <td><button type="button" class="btn" onclick="remove_user('{{ name.id }}');">Remove User</button></td>
+                {% endif %} -->
+                <td><a href="tickets/{{ticket.id}}">Details</a></td>
+            </tr>
+            {% endfor %}
+            
+</tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,7 +1,6 @@
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class User(AbstractUser):
@@ -26,8 +25,32 @@ class Ticket(models.Model):
     title = models.CharField(max_length=30)
     submitter = models.ForeignKey(User, on_delete=models.CASCADE)
     desc = models.CharField(max_length=400)
-    priority = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
-    ongoing = models.BooleanField(default=True)
+
+    class Priority(models.TextChoices):
+        LOW = "Low", 
+        MEDIUM = "Medium", 
+        HIGH = "High", 
+        URGENT = "Urgent", 
+    priority = models.CharField(max_length=6, choices=Priority.choices, default=Priority.LOW)
+
+    class Status(models.TextChoices):
+        NEW = "New", 
+        OPEN = "Open", 
+        RSLVD = "Resolved", 
+        PRGRS = "In Progress", 
+    status = models.CharField(max_length=11, choices=Status.choices, default=Status.NEW)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    class Types(models.TextChoices):
+        BUGS = "Bug/Errors", 
+        FEAT = "Features", 
+        COMM = "General Comments",  
+    type = models.CharField(max_length=16, choices=Types.choices, default=Types.BUGS)
+
+class Comment(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=40)
     timestamp = models.DateTimeField(auto_now=True)
 
 # class Organization(models.Model):

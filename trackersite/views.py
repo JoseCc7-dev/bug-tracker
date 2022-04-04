@@ -10,7 +10,6 @@ from . import models
 
 @login_required
 def index(request):
-    print(request.GET)
     projects = models.Project.objects.filter()
     return render(request, "trackersite/index.html", {
         "projects": projects
@@ -78,13 +77,6 @@ def create_project(request):
         return HttpResponseRedirect("manage-project/{}".format(title))
     else:
         return render(request, "trackersite/newProject.html")
-
-@login_required
-def create_ticket(request):
-    if request.method == "GET":
-        return render(request, "trackersite/newTicket.html")
-    else:
-        pass
     
 @login_required
 def manage_project(request, name):
@@ -110,6 +102,70 @@ def manage_users(request):
                 "users":users
             })
 
+@login_required
+def create_ticket(request):
+    if request.method == "GET":
+        return render(request, "trackersite/newTicket.html")
+    else:
+        pass
+    
+@login_required
+def tickets(request):
+    myTickets = models.Ticket.objects.filter(submitter_id = request.user.id).order_by('timestamp')
+    return render(request, 'trackersite/myTickets.html', {
+        "tickets": myTickets
+    })
+
+@login_required
+def load_ticket(request, id):
+    ticket = models.Ticket.objects.get(id = id)
+    comments = models.Comment.objects.filter(ticket_id = id)
+    return render(request, 'trackersite/ticket.html', {
+        "ticket":ticket, "comments":comments,
+    })
+
+@login_required
+def update_ticket(request):
+    if request.method == "POST":
+        print("post", request.POST)
+        id = request.POST["id"]
+        desc = request.POST["desc"]
+        priority = request.POST["priority"]
+        status = request.POST["status"]
+        type = request.POST["type"]
+
+        ticket = models.Ticket.objects.get(id = id)
+        ticket.desc = desc
+        ticket.priority = priority
+        ticket.status = status
+        ticket.type = type
+        ticket.save()
+
+        return HttpResponseRedirect(f"tickets/{id}")
+    else:
+        print(request.GET)
+        id = request.GET["id"]
+        ticket = models.Ticket.objects.get(id = id)
+        
+        # create and pass in lists to select html option
+        priorities = [ "Low", "Medium", "High", "Urgent"]
+        statuses = [ "New", "Open", "In Progress", "Resolved"]
+        types = [ "Bug/Errors", "Features", "General Comments"]
+
+        return render(request, 'trackersite/updateTicket.html', {
+            "ticket":ticket, "priorities": priorities, "statuses":statuses, "types":types
+        })
+
+def create_comment(request):
+    print(request.GET)
+    id = request.GET["id"]
+    comment = request.GET["comment"]
+    models.Comment.objects.create(ticket_id = id, commenter_id = request.user.id, comment = comment)
+
+    return HttpResponseRedirect(f"tickets/{id}")
+
+# Fetch Functions
+@login_required
 def add_team_member(request):
     body = json.loads(request.body.decode("utf-8"))
     project_id = body["project_id"]
@@ -122,6 +178,7 @@ def add_team_member(request):
     print("new member made")
     return HttpResponse(status=201)
 
+@login_required
 def project_status(request):
     body = json.loads(request.body.decode("utf-8"))
     project_id = body["project_id"]
@@ -133,6 +190,7 @@ def project_status(request):
 
     return HttpResponse(status=204)
 
+@login_required
 def change_role(request):
     body = json.loads(request.body.decode("utf-8"))
     id = body["id"]
@@ -143,8 +201,13 @@ def change_role(request):
     print("done")
     return HttpResponse(status=200)
 
+@login_required
 def remove_user(request):
+    # Select User from fetched id and delete table row 
     body = json.loads(request.body.decode("utf-8"))
     id = body["id"]
     models.User.objects.get(id = id).delete()
     return HttpResponse(status=200)
+
+def testpage(request):
+    return render(request, 'trackersite/jibberjabber.html')

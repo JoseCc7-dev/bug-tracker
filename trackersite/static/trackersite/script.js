@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("test")
 })
 csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
+
 function add_member(user) {
     console.log(user)
     

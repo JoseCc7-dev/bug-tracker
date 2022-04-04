@@ -1,7 +1,7 @@
 {% extends 'trackersite/layout.html' %}
 
 {% block body %}
-<div class="wrapper">
+<div class="wrapperex">
     <div class="text-center mt-4 name" style="display: flex; justify-content: center;"> New Project </div>
     <form action="{% url 'create_project' %}" method="post" class="p-3 mt-3">
         {% csrf_token %}
