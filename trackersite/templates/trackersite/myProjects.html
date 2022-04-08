@@ -1,37 +1,31 @@
 {% extends 'trackersite/layout.html' %}
 
-{% block body_class %}gbody page-top{% endblock %}
-
 {% block body %}
 <br><div class="card shadow border-start-primary py-2">
-    <div style="justify-content:center; display: flex; font-size: large;">My Tickets</div>
+    <div style="justify-content:center; display: flex; padding: 0.5%;">My Projects</div>
     <div>
-        <table class="table table-striped">
-            <thead>
+        <table class="table table-striped projects">
+            <tbody>
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
-                <th scope="col">Priority</th>
+                <th scope="col">Description</th>
                 <th scope="col">Status</th>
-                <th scope="col">Type</th>
                 <th scope="col">Time Created</th>
                 <th scope="col"></th>
                 </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
+                {% for project in projects %}
                 <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ticket.title}}</td>
-                    <td>{{ticket.priority}}</td>
-                    <td>{{ticket.status}}</td>
-                    <td>{{ticket.type}}</td>
-                    <td>{{ticket.timestamp}}</td>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>{{project.title}}</td>
+                    <td>{{project.desc}}</td>
+                    <td>{{project.status}}</td>
+                    <td>{{project.time_created}}</td>
                     <!-- {% if user.role == 'Admin' %}
                     <td><button type="button" class="btn" onclick="role_select('{{ name.id }}');">Change Role</button></td>
                     <td><button type="button" class="btn" onclick="remove_user('{{ name.id }}');">Remove User</button></td>
                     {% endif %} -->
-                    <td><a href="{% url 'load_ticket' ticket.id %}" class="hlink">Details</a></td>
+                    <td><a href="{% url 'manage_project' project.title %}" class="hlink">Details</a></td>
                 </tr>
                 {% endfor %}
                 
@@ -40,35 +34,33 @@
     </div>
 </div>
 
+<!-- Admin Project View -->
+{% if user.role == 'Admin' %}
 <br><div class="card shadow border-start-primary py-2">
-    <div style="justify-content:center; display: flex; font-size: large;">All Tickets</div>
+    <div style="justify-content:center; display: flex; padding: 0.5%;">All Projects</div>
     <div>
-        <table class="table table-striped">
-            <thead>
+        <table class="table table-striped projects">
+            <tbody>
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
-                <th scope="col">Priority</th>
+                <th scope="col">Description</th>
                 <th scope="col">Status</th>
-                <th scope="col">Type</th>
                 <th scope="col">Time Created</th>
                 <th scope="col"></th>
                 </tr>
-            </thead>
-            <tbody>
-                {% for ticket in allTickets %}
+                {% for project in allProjects %}
                 <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ticket.title}}</td>
-                    <td>{{ticket.priority}}</td>
-                    <td>{{ticket.status}}</td>
-                    <td>{{ticket.type}}</td>
-                    <td>{{ticket.timestamp}}</td>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{project.title}}</td>
+                    <td>{{project.desc}}</td>
+                    <td>{{project.status}}</td>
+                    <td>{{project.time_created}}</td>
                     <!-- {% if user.role == 'Admin' %}
                     <td><button type="button" class="btn" onclick="role_select('{{ name.id }}');">Change Role</button></td>
                     <td><button type="button" class="btn" onclick="remove_user('{{ name.id }}');">Remove User</button></td>
                     {% endif %} -->
-                    <td><a href="{% url 'load_ticket' ticket.id %}" class="hlink">Details</a></td>
+                    <td><a href="{% url 'manage_project' project.title %}" class="hlink">Details</a></td>
                 </tr>
                 {% endfor %}
                 
@@ -76,4 +68,5 @@
         </table>
     </div>
 </div>
+{% endif %}
 {% endblock %}

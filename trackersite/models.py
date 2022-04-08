@@ -1,3 +1,4 @@
+from turtle import ondrag
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
@@ -13,7 +14,15 @@ class User(AbstractUser):
 class Project(models.Model):
     title = models.CharField(max_length=30)
     desc = models.CharField(max_length=600)
-    active = models.BooleanField(default=True)
+
+    class Status(models.TextChoices):
+        NOT = "Not Started",
+        PRGRS = "In Progress",
+        CMPLTE = "Complete", 
+    status = models.CharField(max_length=11, choices=Status.choices, default=Status.NOT)
+    manager = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="project_manager", null=True)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    time_created = models.DateTimeField(auto_now=True)
 
 class Team(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

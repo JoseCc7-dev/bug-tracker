@@ -21,36 +21,30 @@
         
         <title>BugTracker</title>
     </head>
-    <body class="{% block body_class %}{% endblock %}">
+    <body class="gbody {% block body_class %}{% endblock %}">
         <nav class="navbar navbar-expand-lg navbar-light bg-light customNav">
-          <a class="brand navbar-brand " style="color: #ffffff;" href="{% url 'index' %}">Harmonic</a>
+          <a class="navbar-brand " href="{% url 'index' %}">Harmonic</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sitetoggle">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="sitetoggle">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-              <li class="nav-item active">
-                <div class="nav-link brand" style="color: #ffffff;" id="user_role">{{user.role}}</div>
+              <li class="nav-item">
+                <div class="nav-link" id="user_role">{{user.role}}</div>
               </li>
               {% if user.role != 'Developer' %}
               <li class="nav-item">
-                <a class="nav-link brand" style="color: #ffffff;" href="{% url 'manage_users' %}">Manage Users</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link brand" style="color: #ffffff;" href="#">All Projects</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link brand" style="color: #ffffff;" href="{% url 'new_ticket' %}">All Tickets</a>
+                <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
               </li>
               {% endif %}
               <li class="nav-item">
-                <a class="nav-link brand" style="color: #ffffff;" href="#">My Projects</a>
+                <a class="nav-link" href="{% url 'my_projects' %}">My Projects</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link brand" style="color: #ffffff;" href="{% url 'my_tickets' %}">My Tickets</a>
+                <a class="nav-link" href="{% url 'my_tickets' %}">My Tickets</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link brand" style="color: #ffffff;" href="{% url 'logout' %}">Logout</a>
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
               </li>
             </ul>
             <!-- Search Bar -->

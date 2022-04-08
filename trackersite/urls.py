@@ -11,6 +11,7 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("create-project", views.create_project, name="create_project"),
     path("manage-project/<str:name>", views.manage_project, name="manage_project"),
+    path("my-projects", views.projects, name="my_projects"),
     path("manage-users", views.manage_users, name="manage_users"), 
     path("new-ticket", views.create_ticket, name="new_ticket"),
     path("my-tickets", views.tickets, name="my_tickets"),
@@ -23,6 +24,8 @@ urlpatterns = [
     path("add-member", views.add_team_member, name="add_member"),
     path("set-status", views.project_status, name="set_status"),
     path("change-role", views.change_role, name="change_role"),
-    path("remove-user", views.remove_user, name="remove_user"),
+    path("delete-user", views.delete_user, name="delete_user"),
+    path("remove-user", views.remove_member, name="remove_member" ),
+
     path("test", views.testpage)
 ]

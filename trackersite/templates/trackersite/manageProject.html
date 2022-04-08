@@ -1,55 +1,199 @@
 {% extends 'trackersite/layout.html' %}
 
+{% block body_class %}gbody page-top{% endblock %}
+
 {% block body %}
-    <div style="justify-content: center; display: flex; margin-bottom: .5%;">
-        <input type="hidden" value="{{ project.id }}" id="project_id">
-        <div>{{ project.title }}</div><br>
-    </div>
-    <div style="margin-bottom: 5%; justify-content: center; display: flex;">{{ project.desc }}</div>
-    <div style="border: 1px solid black; width: 50%; float: right;">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in team %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{member.member.username}}</td>
-                    <td>{{member.member.email}}</td>
-                    <td>{{member.member.role}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% if user.role == 'Admin' or user.role == 'Manager' %}
-        {% if project.active == True %}
-            <div>
-                <label for="team-members"> Assign member to team </label>
-                <select id="team_members" name="members">
-                {% for member in members %}
-                    <option>{{ member.username }}</option>
-                {% endfor %}
-                </select>
-                <button id="add_member" class="btn btn-primary">Add</button>
+
+<div class="wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <div class="container-fluid">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4"></div>
+                <div class="row">
+                    <!-- Project Details -->
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 4%;">
+                        <div class="card shadow border-start-primary py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Title:</span>
+                                            </div>
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Objective/Description:</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ project.title }}</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ project.desc }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Assigned Manager:</span>
+                                            </div>
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Creator:</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ project.manager }}</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ project.creator }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Status:</span>
+                                            </div>
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Time created:</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ project.status }}</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ project.time_created }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Members Table -->
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 4%;">
+                        <div class="card shadow border-start-primary py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1">
+                                                <span style="color: #656565;">Add a member</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex" style="margin-left: 1.5%;">
+                                            <div class="input-group text-dark fw-bold h5 mb-0">
+                                                <input type="hidden" value="{{ project.id }}" id="project_id">
+                                                <select id="team_members" name="type" style="color: #656565; width: 80%;">
+                                                    <option disabled>Members</option>
+                                                    {% for member in members %}
+                                                        <option> {{ member.username }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button id="add_member" class="btn btn-primary" style="width: 20%;">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1">
+                                                <span style="color: #656565;">Team Members</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col"></th>
+                                        </tr>
+                                        {% for member in team %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{member.member.username}}</td>
+                                            <td>{{member.member.email}}</td>
+                                            <td>{{member.member.role}}</td>
+                                            <td><button type="button" class="btn scr" onclick="remove_user('{{ member.id }}',);">Remove User</button></td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 4%;">
+                        <div class="card shadow border-start-primary py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1">
+                                                <span style="color: #656565;">Project Tickets</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Priority</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Time Created</th>
+                                        <th scope="col"></th>
+                                        </tr>
+                                        {% for ticket in tickets %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ticket.title}}</td>
+                                            <td>{{ticket.priority}}</td>
+                                            <td>{{ticket.status}}</td>
+                                            <td>{{ticket.type}}</td>
+                                            <td>{{ticket.timestamp}}</td>
+                                            <td><a href="{% url 'load_ticket' ticket.id %}" class="hlink">Details</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <form action="{% url 'new_ticket' %}" method="get">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ project.id }}">
+                                <input type="submit" class="btn btn-primary" value="Create New Ticket">
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a href="{% url 'new_ticket' %}">Submit Ticket</a>
-            </div>
-            {% if user.role == 'Admin' %}
-            <button class="btn btn-primary" id="change_project_status" value="False">Set Project as Complete</button>
-            {% endif %}
-        {% else %}
-        {% if user.role == 'Admin' %}
-        <button class="btn btn-primary" id="change_project_status" value="True">Set Project as Active</button>
-        {% endif %}
-        {% endif %}
-    {% endif %}
+        </div>
     </div>
+</div>
 
 {% endblock %}

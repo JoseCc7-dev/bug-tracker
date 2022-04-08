@@ -8,6 +8,12 @@ from django.contrib.auth.decorators import login_required
 from . import models
 # Create your views here.
 
+# TODO
+# update project
+# index ui
+# ticket history
+# site welcome page
+
 @login_required
 def index(request):
     projects = models.Project.objects.filter()
@@ -73,7 +79,8 @@ def create_project(request):
     if request.method == "POST":
         title = request.POST["title"].strip()
         desc = request.POST["desc"].strip()
-        newProj = models.Project.objects.create(title = title, desc = desc)
+        creator = request.user.id
+        models.Project.objects.create(title = title, desc = desc, creator_id = creator)
         return HttpResponseRedirect("manage-project/{}".format(title))
     else:
         return render(request, "trackersite/newProject.html")
@@ -84,10 +91,32 @@ def manage_project(request, name):
     team = models.Team.objects.filter(project_id = project.id).order_by('member__role')
     users = models.User.objects.exclude(id__in=
         models.Team.objects.filter(project_id = project.id).values_list('member_id', flat=True))
+    tickets = models.Ticket.objects.filter(project_id = project.id, status__in = ["New","Open","In Progress",])
+    print(tickets)
     print(users)
     return render(request, 'trackersite/manageProject.html', {
-        "project": project, "members":users, "team":team
+        "project": project, "members":users, "team":team, "tickets":tickets
     })
+
+@login_required
+def projects(request):
+    if request.user.role != "Developer":
+        projects = models.Project.objects.filter(id__in= 
+        models.Team.objects.filter(member_id = request.user.id).values_list('project_id'))
+        
+        allProjects = models.Project.objects.filter()
+
+        return render(request, 'trackersite/myProjects.html', {
+            "projects":projects, "allProjects":allProjects
+        }) 
+    else:
+        projects = models.Project.objects.filter(id__in= 
+        models.Team.objects.filter(member_id = request.user.id).values_list('project_id'))
+        print(projects)
+        return render(request, 'trackersite/myProjects.html', {
+            "projects":projects
+        })
+
 
 @login_required
 def manage_users(request):
@@ -105,16 +134,40 @@ def manage_users(request):
 @login_required
 def create_ticket(request):
     if request.method == "GET":
-        return render(request, "trackersite/newTicket.html")
+        # On GET load new ticket template
+        id = request.GET["id"]
+        return render(request, "trackersite/newTicket.html", {
+            "id":id
+        })
     else:
-        pass
+        # On POST create ticket then redirect to project
+        print(request.POST)
+        id = request.POST['project_id']
+        title = request.POST['title']
+        submitter = request.user.id
+        desc = request.POST['project_id']
+        priority = request.POST['priority']
+        type = request.POST['type']
+
+        models.Ticket.objects.create(project_id = id, title = title, submitter = request.user, desc = desc, priority = priority, type = type)
+
+        project_title = models.Project.objects.get(id = id).title
+
+        return HttpResponseRedirect("manage-project/"+ project_title)
     
 @login_required
 def tickets(request):
-    myTickets = models.Ticket.objects.filter(submitter_id = request.user.id).order_by('timestamp')
-    return render(request, 'trackersite/myTickets.html', {
-        "tickets": myTickets
-    })
+    if request.user.role != "Developer":
+        myTickets = models.Ticket.objects.filter(submitter_id = request.user.id).order_by('timestamp')
+        allTickets = models.Ticket.objects.filter()
+        return render(request, 'trackersite/myTickets.html', {
+            "tickets": myTickets, "allTickets": allTickets,
+        })
+    else:
+        myTickets = models.Ticket.objects.filter().order_by('timestamp')
+        return render(request, 'trackersite/myTickets.html', {
+            "tickets": myTickets
+        })
 
 @login_required
 def load_ticket(request, id):
@@ -202,11 +255,20 @@ def change_role(request):
     return HttpResponse(status=200)
 
 @login_required
-def remove_user(request):
+def delete_user(request):
     # Select User from fetched id and delete table row 
     body = json.loads(request.body.decode("utf-8"))
     id = body["id"]
     models.User.objects.get(id = id).delete()
+    return HttpResponse(status=200)
+
+@login_required
+def remove_member(request):
+    body = json.loads(request.body.decode("utf-8"))
+    member_id = body["member_id"]
+    print("row:", member_id)
+    models.Team.objects.get(id = member_id).delete()
+    print("deleted")
     return HttpResponse(status=200)
 
 def testpage(request):

@@ -117,8 +117,31 @@ function change_role(value, id) {
     location.reload()
 }
 
-function remove_user(id) {
+function delete_user(id) {
     if (confirm("Are you sure you want to remove this user? This action cannot be undone.")) {
+        console.log("removing")// fetch remove
+        fetch('/delete-user', {
+            method: 'PUT', 
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                id: id,
+              })
+            })
+            .then(response => response.json())
+    }
+    else {
+        console.log("cancelled")
+    }
+    location.reload()
+}
+
+function remove_user(id) {
+
+    console.log("id:", id)
+
+    if (confirm("Are you sure you want to remove this user from this team?")) {
         console.log("removing")// fetch remove
         fetch('/remove-user', {
             method: 'PUT', 
@@ -126,7 +149,7 @@ function remove_user(id) {
                 'X-CSRFToken': csrftoken
             },
             body: JSON.stringify({
-                id: id,
+                member_id: id,
               })
             })
             .then(response => response.json())
