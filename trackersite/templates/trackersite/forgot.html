@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <link rel="stylesheet" href="{% static 'trackersite/style.css' %}">
+        
+    </head>
+    <body class="gbody">
+        <div class="wrapperex" style="min-width: 50%;">
+            <div class="text-center mt-4 name">Forgot your password? Enter your email and we'll send you instructions on how to reset it.</div>
+            <hr><br>
+            <form class="p-3 mt-3" action="{% url 'forgot' %}" method="post">
+                {% csrf_token %}
+                <div>
+                    <label class="text-center mt-4 name">Email:</label>
+                    <input type="email" class="form-field d-flex align-items-center" name="email" style="width: 80%;" required>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Continue">
+            </form>
+            <br>
+            <div class="text-center fs-6" style="font-size: small;"><a href="{% url 'login' %}">&larr; Back to Login</a> </div>
+        </div>
+    </body>
+</html>

@@ -129,31 +129,25 @@ tr.top{
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #323232 !important;
     float: right;
+    border-color: #323232;
 }
 
 table.projects {
+    border-collapse: collapse;
     border-spacing: 0px;
     table-layout: fixed;
-    width: 99% !important; 
-    margin-left: 0.5%;
 }
 
 table.projects tr th {
-    border: 1px solid #656565;
     font-size: medium;
 }
 
 table.projects tr td {
-    border: 1px solid #656565;
-    
+    border-bottom: 1px solid #656565;
 }
 
 table {
-    border-collapse: collapse;
-}
-
-th {
-    border-bottom-style: solid;
+    border-spacing: 0px;
 }
 
 table tbody tr {

@@ -2,10 +2,10 @@
 
 {% block body %}
 <br><div class="card shadow border-start-primary py-2">
-    <div style="justify-content:center; display: flex; padding: 0.5%;">My Projects</div>
+    <div style="justify-content:center; display: flex; padding: 0.5%; font-size: large;">My Projects</div>
     <div>
-        <table class="table table-striped projects">
-            <tbody>
+        <table class="table projects">
+            <thead>
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
@@ -14,6 +14,8 @@
                 <th scope="col">Time Created</th>
                 <th scope="col"></th>
                 </tr>
+            </thead>
+            <tbody>
                 {% for project in projects %}
                 <tr>
                     <td scope="row">{{ forloop.counter }}</td>
@@ -37,10 +39,10 @@
 <!-- Admin Project View -->
 {% if user.role == 'Admin' %}
 <br><div class="card shadow border-start-primary py-2">
-    <div style="justify-content:center; display: flex; padding: 0.5%;">All Projects</div>
+    <div style="justify-content:center; display: flex; padding: 0.5%; font-size: large;">All Projects</div>
     <div>
-        <table class="table table-striped projects">
-            <tbody>
+        <table class="table projects">
+            <thead>
                 <tr>
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
@@ -49,6 +51,8 @@
                 <th scope="col">Time Created</th>
                 <th scope="col"></th>
                 </tr>
+            </thead>
+            <tbody>
                 {% for project in allProjects %}
                 <tr>
                     <td>{{ forloop.counter }}</td>

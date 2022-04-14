@@ -2,9 +2,9 @@
 
 {% block body %}
 <br><div class="card shadow border-start-primary py-2">
-    <div style="justify-content:center; display: flex; font-size: large;">All Users</div>
+    <div style="justify-content:center; display: flex; padding: 0.5%; font-size: large;">All Users</div>
     <div>
-        <table class="table table-striped">
+        <table class="table projects">
             <thead>
                 <tr>
                 <th scope="col">#</th>
@@ -25,7 +25,11 @@
                     <td>{{name.email}}</td>
                     <td id="role_{{name.id}}">{{name.role}}</td>
                     {% if user.role == 'Admin' %}
+                    {% if user.username != name.username %}
                     <td><button type="button" class="btn scr" onclick="role_select('{{ name.id }}');">Change Role</button></td>
+                    {% else %}
+                    <td><button type="button" class="btn scr" onclick="err('Cannot change own role');">Change Role</button></td>
+                    {% endif %}
                     <td><button type="button" class="btn scr" onclick="delete_user('{{ name.id }}');">Delete User</button></td>
                     {% endif %}
                 </tr>

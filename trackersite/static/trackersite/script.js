@@ -4,11 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
         add.onclick = function() {add_member(document.querySelector("#team_members").value)}}
     catch{}
 
-    try {
-        changeProjectStatus = document.querySelector("#change_project_status") 
-        changeProjectStatus.onclick = function() {finish_project(changeProjectStatus.value)}}
-    catch{}
-    console.log("test")
 })
 csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
 
@@ -34,26 +29,6 @@ function add_member(user) {
             }
             response.json()
         })
-    location.reload()
-}
-
-function finish_project(newStatus) {
-    projectId = document.querySelector("#project_id").value
-    csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
-    
-    console.log(projectId)
-    console.log(newStatus)
-    fetch('/set-status', {
-        method: 'POST', 
-        headers: {
-            'X-CSRFToken': csrftoken
-        },
-        body: JSON.stringify({
-            project_id: projectId,
-            status: newStatus,
-          })
-        })
-        .then(response => response.json())
     location.reload()
 }
 
@@ -158,4 +133,19 @@ function remove_user(id) {
         console.log("cancelled")
     }
     location.reload()
+}
+
+function err(err) {
+    alert(err)
+}
+
+function confirm_delete() {
+    var confirmed = confirm("Are you sure you want to delete this? This action cannot be undone.")
+    
+    if(confirmed) {
+        return true
+    }
+    else {
+        return false
+    }
 }

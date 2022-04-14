@@ -1,0 +1,18 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <link rel="stylesheet" href="{% static 'trackersite/style.css' %}">
+        
+    </head>
+    <body class="gbody">
+        <div class="wrapperex">
+            Thank you for confirming your email. Now you can login to your account.
+            <div class="text-center fs-6" style="font-size: small;"><a href="{% url 'login' %}">Log In</a> </div>
+        </div>
+    </body>
+</html>

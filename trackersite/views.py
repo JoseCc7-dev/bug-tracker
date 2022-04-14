@@ -4,15 +4,23 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.core.mail import EmailMessage
+from django.db.models import Q
 
 from . import models
 # Create your views here.
 
 # TODO
-# update project
-# index ui
-# ticket history
-# site welcome page
+# email verif
+# password reset
+# ui's index, 
+# user page?
+
 
 @login_required
 def index(request):
@@ -40,9 +48,8 @@ def login_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        print(request.POST['email'])
         username = request.POST['userName']
-        email = request.POST['email']
+        user_email = request.POST['email']
         password = request.POST['password']
         confirm = request.POST['confirmPassword']
         try:
@@ -53,7 +60,7 @@ def register_view(request):
             })
             except:
                 pass
-            email = models.User.objects.get(email = email)
+            email = models.User.objects.get(email = user_email)
             return render(request, "trackersite/register.html", {
                 "message": "Account with email already exists"
             })
@@ -64,15 +71,75 @@ def register_view(request):
                 "message": "Passwords do not match"
                 })
             else:
-                user = models.User.objects.create_user(username = username, email = email, password = password)
-                login(request, user)
-                return HttpResponseRedirect(reverse("index"))
+                user = models.User.objects.create_user(username = username, email = user_email, password = password)
+                user.is_active = False
+                user.save()
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your Harmonic account.'
+                message = render_to_string('trackersite/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+                })
+                to_email = user_email
+                email = EmailMessage(
+                            mail_subject, message, to=[to_email]
+                )
+                email.send()
+                return render(request, 'trackersite/confirm.html')
     else:
         return render(request, "trackersite/register.html")
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("login"))
+
+def forgot(request):
+    if request.method == 'GET':
+        return render(request, 'trackersite/forgot.html')
+    else:
+        user_email = request.POST['email']
+        print(user_email)
+        try:
+            user = models.User.objects.get(email = user_email)
+        except:
+            return render(request, 'trackersite/noUser.html')
+        # 
+        # current_site = get_current_site(request)
+        # mail_subject = 'Activate your Harmonic account.'
+        # message = render_to_string('trackersite/reset_email.html', {
+        # 'user': user,
+        # 'domain': current_site.domain,
+        # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+        # 'token':account_activation_token.make_token(user),
+        # })
+        # to_email = user_email
+        # email = EmailMessage(
+        #             mail_subject, message, to=[to_email]
+        # )
+        # email.send()
+        print(user_email)
+        return render(request, 'trackersite/sentEmail.html', {
+            "email":user_email
+        })
+
+def password_reset(request):
+    pass
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = models.User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, models.User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return render(request, 'trackersite/activated.html')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 @login_required
 def create_project(request):
@@ -102,21 +169,56 @@ def manage_project(request, name):
 def projects(request):
     if request.user.role != "Developer":
         projects = models.Project.objects.filter(id__in= 
-        models.Team.objects.filter(member_id = request.user.id).values_list('project_id'))
+        models.Team.objects.filter(member_id = request.user.id).values_list('project_id')).order_by('time_created')
         
-        allProjects = models.Project.objects.filter()
+        allProjects = models.Project.objects.filter().order_by('time_created')
 
         return render(request, 'trackersite/myProjects.html', {
             "projects":projects, "allProjects":allProjects
         }) 
     else:
         projects = models.Project.objects.filter(id__in= 
-        models.Team.objects.filter(member_id = request.user.id).values_list('project_id'))
+        models.Team.objects.filter(member_id = request.user.id).values_list('project_id')).order_by('time_created')
         print(projects)
         return render(request, 'trackersite/myProjects.html', {
             "projects":projects
         })
 
+@login_required
+def update_project(request):
+    if request.method == "GET":
+        id = request.GET["id"]
+        project = models.Project.objects.get(id = id)
+
+        statuses = ["Not Started", "In Progress", "Complete"]
+
+        print(project.manager)
+        return render(request, 'trackersite/updateProject.html', {
+            "project":project, "statuses":statuses
+        })
+    else:
+        print(request.POST)
+
+        id = request.POST["id"]
+        title = request.POST["title"]
+        desc = request.POST["desc"]
+        status = request.POST["status"]
+
+        project = models.Project.objects.get(id = id)
+
+        project.title = title
+        project.desc = desc
+        project.status = status
+        project.save()
+
+        return HttpResponseRedirect(f"manage-project/{project.title}")
+
+@login_required
+def delete_project(request):
+    id = request.POST['id']
+    models.Project.objects.get(id = id).delete()
+
+    return HttpResponseRedirect("my-projects")
 
 @login_required
 def manage_users(request):
@@ -157,24 +259,20 @@ def create_ticket(request):
     
 @login_required
 def tickets(request):
-    if request.user.role != "Developer":
-        myTickets = models.Ticket.objects.filter(submitter_id = request.user.id).order_by('timestamp')
-        allTickets = models.Ticket.objects.filter()
-        return render(request, 'trackersite/myTickets.html', {
-            "tickets": myTickets, "allTickets": allTickets,
-        })
-    else:
-        myTickets = models.Ticket.objects.filter().order_by('timestamp')
-        return render(request, 'trackersite/myTickets.html', {
-            "tickets": myTickets
-        })
+    myTickets = models.Ticket.objects.filter(Q(submitter_id = request.user.id) | Q(assigned_to = request.user.id)).order_by('timestamp')
+    allTickets = models.Ticket.objects.filter().order_by('timestamp')
+    return render(request, 'trackersite/myTickets.html', {
+        "tickets": myTickets, "allTickets": allTickets,
+    })
 
 @login_required
 def load_ticket(request, id):
     ticket = models.Ticket.objects.get(id = id)
     comments = models.Comment.objects.filter(ticket_id = id)
+    history = models.History.objects.filter(ticket_id = id)
+
     return render(request, 'trackersite/ticket.html', {
-        "ticket":ticket, "comments":comments,
+        "ticket":ticket, "comments":comments, "history":history
     })
 
 @login_required
@@ -182,37 +280,72 @@ def update_ticket(request):
     if request.method == "POST":
         print("post", request.POST)
         id = request.POST["id"]
+        title = request.POST["title"]
         desc = request.POST["desc"]
         priority = request.POST["priority"]
         status = request.POST["status"]
         type = request.POST["type"]
+        assigned_to = request.POST["assigned"]
+
+        # create ticket history object
 
         ticket = models.Ticket.objects.get(id = id)
-        ticket.desc = desc
-        ticket.priority = priority
-        ticket.status = status
-        ticket.type = type
+        if ticket.title != title:
+            models.History.objects.create(ticket_id = id, value_field = "Title", value_old = ticket.title, value_new = title)
+            ticket.title = title
+        
+        if ticket.desc != desc:
+            models.History.objects.create(ticket_id = id, value_field = "Desc", value_old = ticket.desc, value_new = desc)
+            ticket.desc = desc
+        
+        if ticket.priority != priority:
+            models.History.objects.create(ticket_id = id, value_field = "Priority", value_old = ticket.priority, value_new = priority)
+            ticket.priority = priority
+
+        if ticket.status != status:
+            models.History.objects.create(ticket_id = id, value_field = "Status", value_old = ticket.status, value_new = status)
+            ticket.status = status
+
+        if ticket.type != type:
+            models.History.objects.create(ticket_id = id, value_field = "Type", value_old = ticket.type, value_new = type)
+            ticket.type = type
+
+        if ticket.assigned_to != assigned_to:
+            user = models.User.objects.get(username = assigned_to)
+            models.History.objects.create(ticket_id = id, value_field = "Assigned", value_old = ticket.assigned_to, value_new = user)
+            ticket.assigned_to = user
+
         ticket.save()
+
 
         return HttpResponseRedirect(f"tickets/{id}")
     else:
         print(request.GET)
         id = request.GET["id"]
         ticket = models.Ticket.objects.get(id = id)
-        
+        users = models.User.objects.filter()
+
         # create and pass in lists to select html option
         priorities = [ "Low", "Medium", "High", "Urgent"]
         statuses = [ "New", "Open", "In Progress", "Resolved"]
         types = [ "Bug/Errors", "Features", "General Comments"]
 
         return render(request, 'trackersite/updateTicket.html', {
-            "ticket":ticket, "priorities": priorities, "statuses":statuses, "types":types
+            "ticket":ticket, "priorities": priorities, "statuses":statuses, "types":types, "users":users
         })
 
+@login_required
+def delete_ticket(request):
+
+    id = request.POST['id']
+    models.Ticket.objects.get(id=id).delete()
+
+    return HttpResponseRedirect("my-tickets")
+
 def create_comment(request):
-    print(request.GET)
-    id = request.GET["id"]
-    comment = request.GET["comment"]
+    print(request.POST)
+    id = request.POST["id"]
+    comment = request.POST["comment"]
     models.Comment.objects.create(ticket_id = id, commenter_id = request.user.id, comment = comment)
 
     return HttpResponseRedirect(f"tickets/{id}")

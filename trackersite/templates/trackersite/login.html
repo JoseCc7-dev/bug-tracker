@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{% static 'trackersite/style.css' %}">
         
     </head>
-    <body>
+    <body class="gbody">
         <div class="wrapperex">
             <div class="logo"> <img src="{% static 'trackersite/Logo.png' %}" alt=""> </div>
             <div class="text-center mt-4 name" style="display: flex; justify-content: center;"> Login </div>
@@ -18,7 +18,7 @@
                 <div class="form-field d-flex align-items-center"> <span class="far fa-user"></span> <input type="text" name="userName" id="userName" placeholder="Username" required> </div>
                 <div class="form-field d-flex align-items-center"> <span class="fas fa-key"></span> <input type="password" name="password" id="pwd" placeholder="Password" required> </div> <button class="btn mt-3">Login</button>
             </form>
-            <div class="text-center fs-6"> <a href="#">Forget password?</a> or <a href="{% url 'register' %}">Sign up</a> </div>
+            <div class="text-center fs-6"> <a href="{% url 'forgot' %}">Forget password?</a> or <a href="{% url 'register' %}">Sign up</a> </div>
         </div>
     </body>
 </html>

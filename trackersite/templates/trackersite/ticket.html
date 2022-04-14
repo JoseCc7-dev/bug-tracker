@@ -11,7 +11,7 @@
                 <div class="d-sm-flex justify-content-between align-items-center mb-4"></div>
                 <div class="row">
                     <!-- Ticket Details -->
-                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 4%;">
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 5%;">
                         <div class="card shadow border-start-primary py-2">
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
@@ -43,7 +43,7 @@
                                                 <span style="color: #656565;">Issue Description:</span>
                                             </div>
                                             <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
-                                                <span style="color: #656565;">Submitted by:</span>
+                                                <span style="color: #656565;">Ticket Type:</span>
                                             </div>
                                         </div>
                                         <div class="d-flex">
@@ -51,7 +51,29 @@
                                                 <span style="color: #656565;">{{ ticket.desc }}</span>
                                             </div>
                                             <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ ticket.type }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Submitted by:</span>
+                                            </div>
+                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
+                                                <span style="color: #656565;">Assigned to:</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
                                                 <span style="color: #656565;">{{ ticket.submitter }}</span>
+                                            </div>
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <span style="color: #656565;">{{ ticket.assigned_to }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -84,16 +106,10 @@
                                     <div class="col me-2">
                                         <div class="d-flex">
                                             <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
-                                                <span style="color: #656565;">Ticket Type:</span>
-                                            </div>
-                                            <div class="text-uppercase fw-bold text-xs mb-1" style="width: 50%;">
                                                 <span style="color: #656565;">Time created:</span>
                                             </div>
                                         </div>
                                         <div class="d-flex">
-                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
-                                                <span style="color: #656565;">{{ ticket.type }}</span>
-                                            </div>
                                             <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
                                                 <span style="color: #656565;">{{ ticket.timestamp }}</span>
                                             </div>
@@ -102,10 +118,16 @@
                                 </div>
                             </div>
                         </div>
+                        {% if user.username == ticket.submitter or user.role == 'Admin' %}
+                            <form action="{% url 'delete_ticket' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ ticket.id }}">
+                                <input type="submit" class="btn btn-primary" onclick="return confirm_delete();" value="Delete Ticket" style="margin-left: 2px;">
+                            </form>
+                        {% endif %}
                         {% if user.role == 'Admin' %}
                         <div>
                             <form action="{% url 'update_ticket' %}" method="get">
-                                {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ ticket.id }}">
                                 <input type="submit" class="btn btn-primary" value="Update">
                             </form>
@@ -113,7 +135,7 @@
                         {% endif %}
                     </div>
                     <!-- Ticket Comments -->
-                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 4%;">
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 5%;">
                         <div class="card shadow border-start-primary py-2">
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
@@ -125,7 +147,7 @@
                                         </div>
                                         <div class="d-flex" style="margin-left: 1.5%;">
                                             <div class="text-dark fw-bold h5 mb-0" style="width: 100%;">
-                                                <form action="{% url 'create_comment' %}" method="get" class="input-group">
+                                                <form action="{% url 'create_comment' %}" method="post" class="input-group">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="id" value="{{ ticket.id }}">
                                                     <input class="form-control form-control-sm" type="text" name="comment" placeholder="Comment" style="height: auto;" maxlength="40">
@@ -137,7 +159,7 @@
                                 </div>
                             </div>
                             <div>
-                                <table class="table table-striped">
+                                <table class="table projects">
                                     <tbody>
                                         <tr>
                                         <th scope="col">Commenter</th>
@@ -151,8 +173,45 @@
                                             <td>{{comment.timestamp}}</td>
                                         </tr>
                                         {% endfor %}
-                                        
-                            </tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ticket History -->
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 40%; margin-left: 5%;">
+                        <div class="card shadow border-start-primary py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1">
+                                                <span style="color: #656565;">Ticket Changes</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <table class="table projects">
+                                <tbody>
+                                    <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Field</th>
+                                    <th scope="col">Old Value</th>
+                                    <th scope="col">New Value</th>
+                                    <th scope="col">Time Changed</th>
+                                    </tr>
+                                    {% for object in history %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{object.value_field}}</td>
+                                        <td>{{object.value_old}}</td>
+                                        <td>{{object.value_new}}</td>
+                                        <td>{{object.timestamp}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
                                 </table>
                             </div>
                         </div>

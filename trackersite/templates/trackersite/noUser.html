@@ -1,0 +1,18 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <link rel="stylesheet" href="{% static 'trackersite/style.css' %}">
+        
+    </head>
+    <body class="gbody">
+        <div class="wrapperex" style="min-width: 50%;">
+            <div class="text-center mt-4 name">No corresponding account found for that email. Please reenter a valid account email or register a new account.</div>
+            <div class="text-center fs-6" style="font-size: small;"><a href="{% url 'login' %}">&larr; Back to Login</a> </div>
+        </div>
+    </body>
+</html>
