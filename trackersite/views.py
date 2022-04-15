@@ -18,7 +18,7 @@ from . import models
 # TODO
 # email verif
 # password reset
-# ui's index, 
+# ui's index,
 # user page?
 
 
@@ -32,7 +32,7 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
-        username = request.POST["userName"]
+        username = request.POST["userName"].capitalize()
         password = request.POST["password"]
         user = authenticate(request, username = username, password = password)
         
@@ -48,7 +48,7 @@ def login_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        username = request.POST['userName']
+        username = request.POST['userName'].capitalize()
         user_email = request.POST['email']
         password = request.POST['password']
         confirm = request.POST['confirmPassword']
@@ -104,28 +104,48 @@ def forgot(request):
         try:
             user = models.User.objects.get(email = user_email)
         except:
+            # if no acct found for email return no user found page
             return render(request, 'trackersite/noUser.html')
-        # 
-        # current_site = get_current_site(request)
-        # mail_subject = 'Activate your Harmonic account.'
-        # message = render_to_string('trackersite/reset_email.html', {
-        # 'user': user,
-        # 'domain': current_site.domain,
-        # 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        # 'token':account_activation_token.make_token(user),
-        # })
-        # to_email = user_email
-        # email = EmailMessage(
-        #             mail_subject, message, to=[to_email]
-        # )
-        # email.send()
+        current_site = get_current_site(request)
+        mail_subject = 'Activate your Harmonic account.'
+        message = render_to_string('trackersite/reset_email.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+        'token':account_activation_token.make_token(user),
+        })
+        to_email = user_email
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        email.send()
         print(user_email)
         return render(request, 'trackersite/sentEmail.html', {
             "email":user_email
         })
 
-def password_reset(request):
-    pass
+def password_reset(request, uidb64=None, token=None):
+    if request.method == "GET":
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = models.User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, models.User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            return render(request, 'trackersite/changePassword.html', {
+                "name":user.username
+            })
+    else:
+        name = request.POST["name"]
+        password = request.POST["password"]
+        confirm_password = request.POST["confirm_password"]
+        if password == confirm_password:
+            user = models.User.objects.get(username = name)
+            user.set_password(password)
+            user.save()
+        print("password:",password,"Cpassword:",confirm_password)
+        
+        return HttpResponse('password changed')
 
 def activate(request, uidb64, token):
     try:
@@ -405,4 +425,4 @@ def remove_member(request):
     return HttpResponse(status=200)
 
 def testpage(request):
-    return render(request, 'trackersite/jibberjabber.html')
+    return render(request, 'trackersite/changePassword.html')
