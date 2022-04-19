@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseBadRequest
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -19,14 +19,25 @@ from . import models
 # email verif
 # password reset
 # ui's index,
-# user page?
+# user pages self & others
 
 
 @login_required
 def index(request):
-    projects = models.Project.objects.filter()
+    # Get all active projects related to user
+    projects = models.Project.objects.filter(Q(id__in= 
+        models.Team.objects.filter(member_id = request.user.id).values_list('project_id')) & Q(status__in= ["In Progress", "Not Started"])).order_by('time_created')
+
+    # Get values list of projects for tickets
+    list = models.Team.objects.filter(member_id = request.user.id).values_list('project_id')
+
+    # Get all unresolved tickets for projects related to user
+    tickets = models.Ticket.objects.filter(Q(project_id__in= list) & Q(status__in= ["New", "Open", "In Progress"])).order_by('project_id')
+
+    print("list:", list)
+    print("tickets:", tickets)
     return render(request, "trackersite/index.html", {
-        "projects": projects
+        "projects": projects, "tickets":tickets
     })
     
 
@@ -186,6 +197,7 @@ def manage_project(request, name):
     })
 
 @login_required
+# load projects page
 def projects(request):
     if request.user.role != "Developer":
         projects = models.Project.objects.filter(id__in= 
@@ -252,6 +264,48 @@ def manage_users(request):
             return render(request, 'trackersite/users.html', {
                 "users":users
             })
+
+@login_required
+def load_user(request, name = None):
+    if request.method == "GET":
+        try:
+            user = models.User.objects.get(username = name)
+        except:
+            return HttpResponseBadRequest()
+        
+        if user == request.user:
+            return render(request, 'trackersite/loadSelf.html', {
+                'loaduser':user
+            })
+        else:
+            return render(request, 'trackersite/loadUser.html', {
+                'loaduser':user
+            })
+    # Can only make POST request on own profile page
+    else:    
+        username = request.POST["username"].capitalize()
+        first_name = request.POST["first_name"].capitalize()
+        last_name = request.POST["last_name"].capitalize()
+        print(username, first_name, last_name)
+        
+        user = models.User.objects.get(id = request.user.id)
+        user.first_name = first_name
+        user.last_name = last_name
+        try:
+            
+            user.username = username
+            user.save()
+        except:
+            print("request", request.user)
+            print("user", user)
+            return render(request, 'trackersite/loadSelf.html', {
+                "loaduser":user, "message":"Username already taken."
+            })
+        request.user = user
+        return render(request, 'trackersite/loadSelf.html', {
+            "loaduser":user
+        }) 
+
 
 @login_required
 def create_ticket(request):
@@ -425,4 +479,4 @@ def remove_member(request):
     return HttpResponse(status=200)
 
 def testpage(request):
-    return render(request, 'trackersite/changePassword.html')
+    return render(request, 'trackersite/welcome.html')

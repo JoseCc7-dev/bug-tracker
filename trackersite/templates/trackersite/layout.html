@@ -23,14 +23,14 @@
     </head>
     <body class="gbody {% block body_class %}{% endblock %}">
         <nav class="navbar navbar-expand-lg navbar-light bg-light customNav">
-          <a class="navbar-brand " href="{% url 'index' %}">Harmonic</a>
+          <a class="navbar-brand " href="{% url 'index' %}"><img src="{{user.image.url}}" alt="Pfp" style="height: 30px; width: 30px;"></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sitetoggle">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="sitetoggle">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li class="nav-item">
-                <div class="nav-link" id="user_role">{{user.role}}</div>
+                <a class="nav-link" href="{% url 'load_user' user.username %}">Welcome, {{user.username}}</a>
               </li>
               {% if user.role != 'Developer' %}
               <li class="nav-item">

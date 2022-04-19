@@ -1,18 +1,96 @@
 {% extends 'trackersite/layout.html' %}
 
 {% block body %}
-    <div class="div"><a href="{% url 'create_project' %}" name="test"> Create New Project </a></div>
-    <div class="div"><a href="{% url 'manage_users' %}"> Manage Users </a></div>
-    Active Projects
-    {% for project in projects %}
-        {% if project.active == True %}
-        <div><a href="manage-project/{{ project.title }}">{{ project.title }}</a>  </div>
-        {% endif %}
-    {% endfor %}
-    Completed/Inactive Projects
-    {% for project in projects %}
-        {% if project.active != True %}
-        <div><a href="manage-project/{{ project.title }}">{{ project.title }}</a>  </div>
-        {% endif %}
-    {% endfor %}
+<div class="wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <div class="container-fluid">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4"></div>
+                <div class="row">
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 80%; margin: 0 auto;">
+                        <div class="card shadow border-start-primary py-2">
+                            <!-- Active Projects -->
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1">
+                                                <span style="color: #656565;">Your Active Projects</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline" style="justify-content: right;">
+                                <input class="form-control" type="search" placeholder="Filter by Title" aria-label="Search" id="searchBar1" onkeyup="search_names('searchBar1', 'titles1')">
+                            </div>
+                            <div>
+                                <table class="table projects">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Time Created</th>
+                                        </tr>
+                                        {% for project in projects %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td><a class="titles1 hlink" href="{% url 'manage_project' project.title %}">{{project.title}}</a></td>
+                                            <td>{{project.desc}}</td>
+                                            <td>{{project.status}}</td>
+                                            <td>{{project.time_created}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
+                            <!-- Project Tickets -->
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col me-2">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1">
+                                                <span style="color: #656565;">Unresolved Project Tickets</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline" style="justify-content: right;">
+                                <input class="form-control" type="search" placeholder="Filter by Title" aria-label="Search" id="searchBar2" onkeyup="search_names('searchBar2', 'titles2')">
+                            </div>
+                            <div>
+                                <table class="table projects">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Priority</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Type</th>
+                                            <th scope="col">Time Created</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                        {% for ticket in tickets %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td><a class="titles2 hlink" href="{% url 'load_ticket' ticket.id %}">{{ticket.title}}</a></td>
+                                            <td>{{ticket.priority}}</td>
+                                            <td>{{ticket.status}}</td>
+                                            <td>{{ticket.type}}</td>
+                                            <td>{{ticket.timestamp}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

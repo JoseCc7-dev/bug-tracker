@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
         add.onclick = function() {add_member(document.querySelector("#team_members").value)}}
     catch{}
 
+    
 })
+changeflag = false;
+
 csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value
 
 function add_member(user) {
@@ -34,45 +37,51 @@ function add_member(user) {
 
 function role_select(id) {
     console.log("id:",id)
-    var role = document.querySelector("#role_"+ id)
-    var select = document.createElement("select")
-    var option1 = document.createElement("option")
-    var option2 = document.createElement("option")
-    var option3 = document.createElement("option")
-    var change = document.createElement("button")
-    var user_role = document.querySelector("#user_role")
-
-
-    option1.textContent = "Developer"
-    option2.textContent = "Manager"
-    option3.textContent = "Admin"
-    
-    if (option1.textContent === role.textContent) {
-        console.log("check 1")
-        option1.selected = true;
-    }
-    else if (option2.textContent === role.textContent) {
-        console.log("check 2")
-        option2.selected = true;
+    if (changeflag == true) {
+        location.reload()
     }
     else {
-        console.log("checks failed")
-        option3.selected = true;
+        changeflag = true
+        var role = document.querySelector("#role_"+ id)
+        var select = document.createElement("select")
+        var option1 = document.createElement("option")
+        var option2 = document.createElement("option")
+        var option3 = document.createElement("option")
+        var change = document.createElement("button")
+        var user_role = document.querySelector("#user_role")
+
+
+        option1.textContent = "Developer"
+        option2.textContent = "Manager"
+        option3.textContent = "Admin"
+        
+        if (option1.textContent === role.textContent) {
+            console.log("check 1")
+            option1.selected = true;
+        }
+        else if (option2.textContent === role.textContent) {
+            console.log("check 2")
+            option2.selected = true;
+        }
+        else {
+            console.log("checks failed")
+            option3.selected = true;
+        }
+        
+        console.log("role:",user_role.textContent)
+        change.textContent = "Change"
+        change.className = "btn"
+        change.addEventListener("click", () => {change_role(select.selectedOptions[0].value, id)})
+
+        console.log(role.textContent)
+
+        select.append(option1, option2, option3)
+        role.textContent = ""
+        role.append(select, change)
+
+        console.log(role.textContent)
+        return false
     }
-    
-    console.log("role:",user_role.textContent)
-    change.textContent = "Change"
-    change.className = "btn"
-    change.addEventListener("click", () => {change_role(select.selectedOptions[0].value, id)})
-
-    console.log(role.textContent)
-
-    select.append(option1, option2, option3)
-    role.textContent = ""
-    role.append(select, change)
-
-    console.log(role.textContent)
-    return false
 }
 
 function change_role(value, id) {
@@ -147,5 +156,45 @@ function confirm_delete() {
     }
     else {
         return false
+    }
+}
+
+function search_names(searchBar, values) {
+    let input = document.getElementById(searchBar).value
+    input=input.toLowerCase();
+    let x = document.getElementsByClassName(values);
+    console.log(input)
+
+    for (i = 0; i < x.length; i++) {
+        console.log(x[i].innerHTML) 
+        if (input == '') {
+            x[i].parentNode.parentNode.style.display="table-row";
+        }
+        else if (!x[i].innerHTML.toLowerCase().includes(input)) {
+            x[i].parentNode.parentNode.style.display="none";
+        }
+        else {
+            x[i].parentNode.parentNode.style.display="table-row";                 
+        }
+    }
+}
+
+function search_fields(searchBar, values) {
+    let input = document.getElementById(searchBar).value
+    input=input.toLowerCase();
+    let x = document.getElementsByClassName(values);
+    console.log(input)
+
+    for (i = 0; i < x.length; i++) {
+        console.log(x[i].innerHTML) 
+        if (input == '') {
+            x[i].parentNode.style.display="table-row";
+        }
+        else if (!x[i].innerHTML.toLowerCase().includes(input)) {
+            x[i].parentNode.style.display="none";
+        }
+        else {
+            x[i].parentNode.style.display="table-row";                 
+        }
     }
 }

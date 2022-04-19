@@ -5,6 +5,9 @@
 {% block body %}
 <br><div class="card shadow border-start-primary py-2">
     <div style="justify-content:center; display: flex; padding: 0.5%; font-size: large;">My Tickets</div>
+    <div class="form-inline" style="justify-content: right;">
+        <input class="form-control" type="search" placeholder="Filter by Title" aria-label="Search" id="searchBar1" onkeyup="search_names('searchBar1', 'titles1')">
+    </div>
     <div>
         <table class="table projects">
             <thead>
@@ -15,23 +18,17 @@
                 <th scope="col">Status</th>
                 <th scope="col">Type</th>
                 <th scope="col">Time Created</th>
-                <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for ticket in tickets %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ticket.title}}</td>
+                    <td><a class="titles1 hlink" href="{% url 'load_ticket' ticket.id %}" >{{ticket.title}}</a></td>
                     <td>{{ticket.priority}}</td>
                     <td>{{ticket.status}}</td>
                     <td>{{ticket.type}}</td>
                     <td>{{ticket.timestamp}}</td>
-                    <!-- {% if user.role == 'Admin' %}
-                    <td><button type="button" class="btn" onclick="role_select('{{ name.id }}');">Change Role</button></td>
-                    <td><button type="button" class="btn" onclick="remove_user('{{ name.id }}');">Remove User</button></td>
-                    {% endif %} -->
-                    <td><a href="{% url 'load_ticket' ticket.id %}" class="hlink">Details</a></td>
                 </tr>
                 {% endfor %}
                 
@@ -41,6 +38,9 @@
 </div>
 <br><div class="card shadow border-start-primary py-2">
     <div style="justify-content:center; display: flex; padding: 0.5%; font-size: large;">All Tickets</div>
+    <div class="form-inline" style="justify-content: right;">
+        <input class="form-control" type="search" placeholder="Filter by Title" aria-label="Search" id="searchBar2" onkeyup="search_names('searchBar2', 'titles2')">
+    </div>
     <div>
         <table class="table projects">
             <thead>
@@ -51,23 +51,17 @@
                 <th scope="col">Status</th>
                 <th scope="col">Type</th>
                 <th scope="col">Time Created</th>
-                <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for ticket in allTickets %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ticket.title}}</td>
+                    <td><a class="titles2 hlink" href="{% url 'load_ticket' ticket.id %}" >{{ticket.title}}</a></td>
                     <td>{{ticket.priority}}</td>
                     <td>{{ticket.status}}</td>
                     <td>{{ticket.type}}</td>
                     <td>{{ticket.timestamp}}</td>
-                    <!-- {% if user.role == 'Admin' %}
-                    <td><button type="button" class="btn" onclick="role_select('{{ name.id }}');">Change Role</button></td>
-                    <td><button type="button" class="btn" onclick="remove_user('{{ name.id }}');">Remove User</button></td>
-                    {% endif %} -->
-                    <td><a href="{% url 'load_ticket' ticket.id %}" class="hlink">Details</a></td>
                 </tr>
                 {% endfor %}
                 

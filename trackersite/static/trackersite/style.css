@@ -163,6 +163,15 @@ button.scr {
 }
 
 .hlink {
-    text-decoration: none;
     color: #212529;  
+}
+
+.gray {
+    color: #656565;
+}
+
+.message {
+    font-size: small;
+    color: rgb(243, 73, 73);
+    font-weight: normal;
 }

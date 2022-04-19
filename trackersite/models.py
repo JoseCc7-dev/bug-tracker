@@ -10,6 +10,7 @@ class User(AbstractUser):
         MANG = "Manager", "Manager"
         ADMN = "Admin", "Admin"
     role = models.CharField(max_length=9, choices=Role.choices, default=Role.DEV)
+    image = models.ImageField(upload_to='covers', default='covers/pfp1.jpg')
 
 class Project(models.Model):
     title = models.CharField(max_length=30)

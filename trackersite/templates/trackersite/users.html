@@ -3,6 +3,9 @@
 {% block body %}
 <br><div class="card shadow border-start-primary py-2">
     <div style="justify-content:center; display: flex; padding: 0.5%; font-size: large;">All Users</div>
+    <div class="form-inline" style="justify-content: right;">
+            <input class="form-control" type="search" placeholder="Filter by Name" aria-label="Search" id="searchBar" onkeyup="search_names('searchBar','names')">
+    </div>
     <div>
         <table class="table projects">
             <thead>
@@ -21,7 +24,7 @@
                 {% for name in users %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{name.username}}</td>
+                    <td><a class="names hlink" href="{% url 'load_user' name.username %}">{{name.username}}</a></td>
                     <td>{{name.email}}</td>
                     <td id="role_{{name.id}}">{{name.role}}</td>
                     {% if user.role == 'Admin' %}

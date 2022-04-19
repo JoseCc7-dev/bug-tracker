@@ -133,6 +133,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-inline" style="justify-content: right;">
+                                <input class="form-control" type="search" placeholder="Filter by Name" aria-label="Search" id="searchBar1" onkeyup="search_names('searchBar1','names')">
+                            </div>
                             <div>
                                 <table class="table projects">
                                     <tbody>
@@ -148,7 +151,7 @@
                                         {% for member in team %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td>{{member.member.username}}</td>
+                                            <td><a class="names hlink" href="{% url 'load_user' member.member.username %}">{{member.member.username}}</a></td>
                                             <td>{{member.member.email}}</td>
                                             <td>{{member.member.role}}</td>
                                             {% if user.role != 'Developer' %}
@@ -175,6 +178,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-inline" style="justify-content: right;">
+                                <input class="form-control" type="search" placeholder="Filter by Title" aria-label="Search" id="searchBar2" onkeyup="search_names('searchBar2', 'titles')">
+                            </div>
                             <div>
                                 <table class="table projects">
                                     <tbody>
@@ -185,17 +191,15 @@
                                         <th scope="col">Status</th>
                                         <th scope="col">Type</th>
                                         <th scope="col">Time Created</th>
-                                        <th scope="col"></th>
                                         </tr>
                                         {% for ticket in tickets %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td>{{ticket.title}}</td>
+                                            <td><a class="titles hlink" href="{% url 'load_ticket' ticket.id %}">{{ticket.title}}</a></td>
                                             <td>{{ticket.priority}}</td>
                                             <td>{{ticket.status}}</td>
                                             <td>{{ticket.type}}</td>
                                             <td>{{ticket.timestamp}}</td>
-                                            <td><a href="{% url 'load_ticket' ticket.id %}" class="hlink">Details</a></td>
                                         </tr>
                                         {% endfor %}
                                         </tbody>
