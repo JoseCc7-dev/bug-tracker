@@ -12,7 +12,7 @@
                         <div class="card shadow border-start-primary py-2">
                             <h3 class="fw-bold text-xs mb-1 gray" style="margin-left: 1%;">Edit Profile</h3>
                             <div class="logo"> <img src="{{ loaduser.image.url }}" alt=""> </div>
-                            <div class="text-center mt-4 name" style="display: flex; justify-content: center;"> Change Profile Picture </div>
+                            <div class="text-center mt-4 name" style="display: flex; justify-content: center;"> <a class="hlink gray" href="{% url 'change_picture' %}">Change Profile Picture</a>  </div>
                             <hr style="height: 3px; color: #656565;">
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
@@ -63,7 +63,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <span style="color: #656565;">Account Security</span>
+                            <hr>
+                            <span class="fw-bold h5 mb-0 gray">Account Security</span>
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
                                     <div class="col me-2">
@@ -75,9 +76,12 @@
                                         <div class="d-flex">
                                             <div class="text-dark fw-bold h5 mb-0 form-inline" style="width: 100%;">
                                                 <input class="form-control gray" type="email" value="{{loaduser.email}}" disabled style="width: 75%;">
-                                                <span><a class="hlink" href="">Change Email</a></span>
+                                                <span><a class="hlink" href="{% url 'change_email' %}" style="font-size: small; margin-left: 1rem;">Change Email</a></span>
                                             </div>
                                         </div>
+                                        {% if email_message %}
+                                            <div class="message">{{email_message}}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -90,12 +94,16 @@
                                             </div>
                                         </div>
                                         <div class="d-flex">
-                                            <div class="text-dark fw-bold h5 mb-0 form-inline" style="width: 50%;">
-                                                <input class="form-control gray" type="email" value="********" disabled>
+                                            <div class="text-dark fw-bold h5 mb-0 form-inline" style="width: 75%;">
+                                                <input class="form-control gray" type="email" value="********" disabled style="width: 50%;">
                                                 <br>
-                                                <span><a class="hlink" href="">Change Password</a></span>
+                                                <span><a class="hlink" href="{% url 'new_password' %}" style="font-size: small; margin-left: 1rem;">Change Password</a></span>
                                             </div>
+                                            
                                         </div>
+                                        {% if password_message %}
+                                            <div class="message">{{password_message}}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

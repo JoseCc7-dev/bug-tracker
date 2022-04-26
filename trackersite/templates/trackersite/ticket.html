@@ -168,7 +168,7 @@
                                         </tr>
                                         {% for comment in comments %}
                                         <tr>
-                                            <td>{{comment.commenter}}</td>
+                                            <td><a class="hlink" href="{% url 'load_user' comment.commenter %}">{{comment.commenter}}</a></td>
                                             <td>{{comment.comment}}</td>
                                             <td>{{comment.timestamp}}</td>
                                         </tr>

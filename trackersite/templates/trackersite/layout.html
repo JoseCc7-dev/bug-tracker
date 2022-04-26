@@ -23,7 +23,7 @@
     </head>
     <body class="gbody {% block body_class %}{% endblock %}">
         <nav class="navbar navbar-expand-lg navbar-light bg-light customNav">
-          <a class="navbar-brand " href="{% url 'index' %}"><img src="{{user.image.url}}" alt="Pfp" style="height: 30px; width: 30px;"></a>
+          <div><img src="{{user.image.url}}" alt="Pfp" style="height: 30px; width: 30px;"></div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sitetoggle">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -32,10 +32,15 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'load_user' user.username %}">Welcome, {{user.username}}</a>
               </li>
-              {% if user.role != 'Developer' %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                <a class="nav-link" href="{% url 'index' %}">Dashboard</a>
               </li>
+              {% if user.role != 'Developer' %}
+                {% if user.role == 'Admin' %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                </li>
+                {% endif %}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'create_project' %}">New Project</a>
               </li>

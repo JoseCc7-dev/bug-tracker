@@ -48,7 +48,6 @@ function role_select(id) {
         var option2 = document.createElement("option")
         var option3 = document.createElement("option")
         var change = document.createElement("button")
-        var user_role = document.querySelector("#user_role")
 
 
         option1.textContent = "Developer"
@@ -68,7 +67,6 @@ function role_select(id) {
             option3.selected = true;
         }
         
-        console.log("role:",user_role.textContent)
         change.textContent = "Change"
         change.className = "btn"
         change.addEventListener("click", () => {change_role(select.selectedOptions[0].value, id)})

@@ -15,6 +15,7 @@ urlpatterns = [
     path("forgot", views.forgot, name="forgot"),
     path("activate/<str:uidb64>/<str:token>", views.activate, name="activate"),
     path("password_reset/<str:uidb64>/<str:token>", views.password_reset, name="reset_password"),
+    path("demo-login", views.login_demo_user, name="demo_login"),
     
     # project urls
     path("create-project", views.create_project, name="create_project"),
@@ -23,10 +24,16 @@ urlpatterns = [
     path("update-project", views.update_project, name="update_project"),
     path("delete-project", views.delete_project, name="delete_project"),
     
-    # user urls
+    # user page urls
     path("manage-users", views.manage_users, name="manage_users"),
-    path("user/<str:name>", views.load_user, name="load_user"), 
-    
+    path("user/<str:name>", views.load_user, name="load_user"),
+    path("new-password", views.new_password, name="new_password"),
+    path("change-pfp", views.change_picture, name="change_picture"),
+
+    # change acct email urls 
+    path("change-email", views.change_email_request, name="change_email"),
+    path("new-email/<str:uidb64>/<str:token>", views.new_email, name="new_email"),
+    path("confirm-email-change/<str:uidb64>/<str:token>", views.change_account_email, name="confirm_email_change"),
     
     # ticket urls
     path("new-ticket", views.create_ticket, name="new_ticket"),
@@ -39,12 +46,10 @@ urlpatterns = [
         
     # API route(s)
     path("add-member", views.add_team_member, name="add_member"),
-    path("set-status", views.project_status, name="set_status"),
     path("change-role", views.change_role, name="change_role"),
     path("delete-user", views.delete_user, name="delete_user"),
     path("remove-user", views.remove_member, name="remove_member" ),
 
-    path("test", views.testpage)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

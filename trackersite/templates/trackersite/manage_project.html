@@ -87,11 +87,11 @@
                                 <input type="hidden" name="id" value="{{ project.id }}">
                                 <input type="submit" class="btn btn-primary" onclick="return confirm_delete();" value="Delete Project" style="margin-left: 2px;">
                             </form>
-                            {% endif %}
                             <form action="{% url 'update_project' %}" method="get">
                                 <input type="hidden" name="id" value="{{ project.id }}">
                                 <input type="submit" class="btn btn-primary" value="Update Project">
                             </form>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- Members Table -->

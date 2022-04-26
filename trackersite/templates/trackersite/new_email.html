@@ -1,0 +1,42 @@
+{% extends 'trackersite/layout.html' %}
+
+{% block body %}
+<div class="wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <div class="container-fluid">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4"></div>
+                <div class="row">
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 60%; margin: 0 auto;">
+                        <div class="card shadow border-start-primary py-2">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col pdiv">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1 gray" style="width: 50%;">
+                                                <span>New Email Adress:</span>
+                                            </div>
+                                        </div>
+                                        <form action="{% url 'new_email' None None %}" method="POST">
+                                            {% csrf_token %}
+                                        <div class="d-flex">
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <input class="form-control gray" type="email" name="new_email" required>
+                                                {% if message1 %}
+                                                <div class="message">{{ message1 }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                <input type="submit" class="btn btn-primary" value="Send email to confirm new address">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

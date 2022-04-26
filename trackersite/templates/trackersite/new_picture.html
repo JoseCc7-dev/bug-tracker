@@ -1,0 +1,47 @@
+{% extends 'trackersite/layout.html' %}
+
+{% block body %}
+<div class="wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <div class="container-fluid">
+                <div class="d-sm-flex justify-content-between align-items-center mb-4"></div>
+                <div class="row">
+                    <div class="col-md-6 col-xl-3 mb-4" style="width: 60%; margin: 0 auto;">
+                        <div class="card shadow border-start-primary py-2">
+                            <div class="text-center mt-4 name" style="display: flex; justify-content: center;">Upload a new image to set as your profile picture.</div>
+                            <hr style="height: 3px; color: #656565;">
+                            <div class="card-body">
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col pdiv">
+                                        <div class="d-flex">
+                                            <div class="text-uppercase fw-bold text-xs mb-1 gray" style="width: 50%;">
+                                                <span>Old Password:</span>
+                                            </div>
+                                        </div>
+                                        <form action="{% url 'change_picture' %}" method="POST" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                        <div class="d-flex">
+                                            <div class="text-dark fw-bold h5 mb-0" style="width: 50%;">
+                                                <input class="form-control gray" type="file" name="image_file" accept="image/*" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <a class="hlink" href="{% url 'load_user' user.username %}">&larr;Back to Profile Page</a>
+                            </div>
+                        </div>
+                        <div>
+                            
+                                <input type="submit" class="btn btn-primary" value="Upload New Image">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

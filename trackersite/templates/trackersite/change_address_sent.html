@@ -11,15 +11,15 @@
     </head>
     <body class="gbody">
         <div class="wrapperex" style="min-width: 50%;">
-            <div class="text-center mt-4 name">Instructions have been sent to {{email}}. Please check your inbox for further instruction.</div>
+            <div class="text-center mt-4 name">An email been sent to {{email}}. Please check your inbox for further instruction.</div>
             <hr><br>
-            <form class="p-3 mt-3" action="{% url 'forgot' %}" method="post">
+            <form class="p-3 mt-3" action="{% url 'change_email' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="email" value="{{email}}">
                 <input type="submit" class="btn btn-primary" value="Resend Email">
             </form>
             <br>
-            <div class="text-center fs-6" style="font-size: small;"><a href="{% url 'login' %}">&larr; Back to Login</a> </div>
+            <div class="text-center fs-6" style="font-size: small;"><a href="{% url 'load_user' user.username %}">&larr; Back to User Page</a> </div>
         </div>
     </body>
 </html>
