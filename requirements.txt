@@ -1,0 +1,6 @@
+gunicorn
+django
+django-decouple
+django-channels
+six
+pillow

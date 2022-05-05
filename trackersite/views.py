@@ -287,7 +287,7 @@ def manage_users(request):
     if request.user.role != "Admin":
         return HttpResponseRedirect(reverse("index"))
     else:
-        users = models.User.objects.filter().order_by("id")
+        users = models.User.objects.filter().order_by("username")
         return render(request, 'trackersite/users.html', {
             "users":users
         })
@@ -496,7 +496,7 @@ def create_ticket(request):
         id = request.POST['project_id']
         title = request.POST['title']
         submitter = request.user.id
-        desc = request.POST['project_id']
+        desc = request.POST['desc']
         priority = request.POST['priority']
         type = request.POST['type']
         

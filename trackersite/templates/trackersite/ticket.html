@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                         </div>
-                        {% if user.username == ticket.submitter or user.role == 'Admin' %}
+                        {% if user == ticket.submitter or user.role == 'Admin' %}
                             <form action="{% url 'delete_ticket' %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ ticket.id }}">
