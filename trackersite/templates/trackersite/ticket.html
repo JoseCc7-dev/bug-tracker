@@ -118,14 +118,14 @@
                                 </div>
                             </div>
                         </div>
-                        {% if user == ticket.submitter or user.role == 'Admin' %}
+                        {% if user == ticket.submitter or user.role != 'Developer' %}
                             <form action="{% url 'delete_ticket' %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="id" value="{{ ticket.id }}">
                                 <input type="submit" class="btn btn-primary" onclick="return confirm_delete();" value="Delete Ticket" style="margin-left: 2px;">
                             </form>
                         {% endif %}
-                        {% if user.role == 'Admin' %}
+                        {% if user.role != 'Developer' %}
                         <div>
                             <form action="{% url 'update_ticket' %}" method="get">
                                 <input type="hidden" name="id" value="{{ ticket.id }}">
