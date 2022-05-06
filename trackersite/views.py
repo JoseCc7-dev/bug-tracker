@@ -16,12 +16,6 @@ from django.core.files.storage import FileSystemStorage
 from . import models
 # Create your views here.
 
-# TODO
-# email verif
-# password reset
-# ui's index,
-# user pages self & others
-
 def isAdmin(user):
     if user.role == 'Admin':
         return True
@@ -495,7 +489,6 @@ def create_ticket(request):
         # On POST create ticket then redirect to project
         id = request.POST['project_id']
         title = request.POST['title']
-        submitter = request.user.id
         desc = request.POST['desc']
         priority = request.POST['priority']
         type = request.POST['type']
