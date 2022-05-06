@@ -573,7 +573,7 @@ def update_ticket(request):
 
         id = request.GET["id"]
         ticket = models.Ticket.objects.get(id = id)
-        users = models.User.objects.filter()
+        users = models.User.objects.filter().order_by("username")
 
         # create and pass in lists to select html option
         priorities = [ "Low", "Medium", "High", "Urgent"]
