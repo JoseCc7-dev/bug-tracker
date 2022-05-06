@@ -4,5 +4,6 @@ django-decouple
 django-channels
 six
 pillow
+whitenoise
 boto3
 django-storages
