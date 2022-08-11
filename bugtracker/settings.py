@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["enigmatic-basin-84160.herokuapp.com"]
+ALLOWED_HOSTS = ["harmonic-bugtracker.herokuapp.com"]
 
 
 # Application definition
